@@ -1,0 +1,20 @@
+const mango = require("mongoose");
+
+const userSchema = new mango.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  age: {
+    type: Number,
+  },
+});
+
+const User = mango.model("User", userSchema);
+
+module.exports = User;

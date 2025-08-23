@@ -1,28 +1,25 @@
-const express=require('express');
-const dotenv=require("dotenv");
-const connectDB = require('./db/db.config');
-// const connectDB = require('../db/db.config');
-const arya=express();
-// arya.get('/',(req,res)=>{
-//     res.send("hello server")
-    
-// });
-// const port =3000
-// arya.listen(port,()=>{
-//     console.log("server is running on port 3000")
-// });
+const express = require("express");
+const dotenv = require("dotenv");
+const connectDB = require("./db/db.config");
+const app = express();
+const userRouter = require("./routes/user.route");
+const productRouter= require("./routes/product.route");
+const carRouter = require("./routes/car.route")
+dotenv.config(); // Load environment variables from .env file
+app.use(express.json()); // Middleware to parse JSON request bodies
+app.use("/api/v1/user", userRouter);
+app.use("/api/v1/product",productRouter);
+app.use("/api/v1/car",carRouter);
+async function startServer() {
+  try {
+    await connectDB(); // Ensure the database connection is established
 
-
-dotenv.config(); //load environment variable from .env file
-
-async function startServer(){
-try{
- await connectDB()
- arya.listen(process.env.PORT,()=>{
-    console.log("server is running on port 5000");
- })
-}catch(err){
-    console.error("error",err.message);
+    app.listen(process.env.PORT, () => {
+      console.log(`Server is running on port ${process.env.PORT}`);
+    });
+  } catch (err) {
+    console.error("Failed to connect to the database:", err.message);
+  }
 }
-}
-startServer();
+
+startServer(); // Start the server after connecting to the database
