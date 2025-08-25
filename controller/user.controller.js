@@ -33,4 +33,36 @@ const createUser = async (req, res) => {
   }
 };
 
-module.exports = { createUser };
+const getUser = async (req,res) => {
+  try{
+   const users = await User.find();
+   res.status(200).json({message :"User fetched Successfully",users})   
+  }catch(err){
+    res.status(500).json({message: err.message})
+  }    
+}
+
+const updateUser = async(req,res)=>{
+
+  try{
+    const{id}= req.params;
+    const {age,name,email} =req.body;
+    const updateUser= await User.findByIdAndUpdate(id,{age,name,email});
+    res.status(200).json({message :"User fetched Successfully",updateUser}) 
+  }catch(err){
+    res.status(500).json({message: err.message})
+  }
+}
+
+const deleteUser= async(req,res)=>{
+  try{
+     const{id}= req.params;
+    
+    const deleteUser= await User.findByIdAndDelete(id);
+    res.status(200).json({message :"User fetched Successfully",deleteUser}) 
+  }catch(err){
+     res.status(500).json({message: err.message})
+  }
+}
+
+module.exports = { createUser,getUser,updateUser,deleteUser};

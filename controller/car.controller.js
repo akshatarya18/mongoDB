@@ -11,8 +11,18 @@ const createCar = async(req,res)=>{
     }catch(err){
       res.status(500).json({message:err.message})
     }
+};
+
+
+const getCar = async (req,res) => {
+  try{
+   const car = await Car.find();
+   res.status(200).json({message :"car fetched Successfully",car})   
+  }catch(err){
+    res.status(500).json({message: err.message})
+  }    
 }
 
 module.exports={
-    createCar
+    createCar,getCar
 };
