@@ -19,19 +19,45 @@
 
 
 const User = require("../models/user.model"); // Corrected path and filename
-
+const bcrypt =require("bcryptjs");
 const createUser = async (req, res) => {
   try {
-    const { age, name, email } = req.body; // Use 'username' to match schema
+    const { age, name, email, password } = req.body; // Use 'username' to match schema
+    console.log(req.body);
+    const existingUser =await User.findOne({email})
+    if(existingUser){
+      return res.status(400).json({message : "user already exists"})
+    }
 
+    const encryptPassword = await bcrypt.hash(password,10);
     // Create new user using the correct fields
-    const newUser = await User.create({ age, name, email });
+    const newUser = await User.create({ age, name,email, password:encryptPassword });
 
     res.status(201).json({ message: "User created successfully", user: newUser }); // Use 201 for creation
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+ 
+  const login = async (req,res)=>{
+    try{
+      const {email,password} = req.body;
+
+      const user = await User.findOne({email});
+      // console.log(user);
+      if (!user){
+        return res.status(400).json({message:"user not found"});
+      }
+      const isPasswordMatch = await bcrypt.compare(password,user.password);
+      if(!isPasswordMatch){
+        return res.status(400).json({message:"invalid user"});
+      }
+       res.status(200).json({message:"login successfull",user});
+    }catch(err){
+      res.status(500).json({message: err.message})
+      
+    }
+  }
 
 const getUser = async (req,res) => {
   try{
@@ -65,4 +91,4 @@ const deleteUser= async(req,res)=>{
   }
 }
 
-module.exports = { createUser,getUser,updateUser,deleteUser};
+module.exports = { createUser,getUser,updateUser,deleteUser,login};

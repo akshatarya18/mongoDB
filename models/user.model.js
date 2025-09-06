@@ -13,6 +13,10 @@ const userSchema = new mango.Schema({
   age: {
     type: Number,
   },
+  password: {
+    type:String,
+    required:true,
+  }
 });
 
 const User = mango.model("User", userSchema);

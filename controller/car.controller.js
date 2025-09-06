@@ -23,6 +23,29 @@ const getCar = async (req,res) => {
   }    
 }
 
+const updateCar = async (req,res)=>{
+  try{
+    const{id} = req.params;
+    const {carName,carBrand,carPrice} =req.body;
+    const updateCar = await Car.findByIdAndUpdate(id,{carBrand,carName,carPrice});
+    res.status(200).json({message :"car fetched Successfully",updateCar}) 
+  }catch(err){
+      res.status(500).json({message: err.message})
+  }
+}
+
+const deleteCar= async(req,res)=>{
+  try{
+     const{id}= req.params;
+    
+    const deleteCar= await Car.findByIdAndDelete(id);
+    res.status(200).json({message :"car fetched Successfully",deleteCar}) 
+  }catch(err){
+     res.status(500).json({message: err.message});
+  }
+}
+
 module.exports={
-    createCar,getCar
+    createCar,getCar,updateCar,deleteCar
+
 };
