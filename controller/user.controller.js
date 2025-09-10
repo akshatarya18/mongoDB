@@ -20,6 +20,7 @@
 
 const User = require("../models/user.model"); // Corrected path and filename
 const bcrypt =require("bcryptjs");
+const jwt = require("jsonwebtoken");
 const createUser = async (req, res) => {
   try {
     const { age, name, email, password } = req.body; // Use 'username' to match schema
@@ -52,7 +53,18 @@ const createUser = async (req, res) => {
       if(!isPasswordMatch){
         return res.status(400).json({message:"invalid user"});
       }
-       res.status(200).json({message:"login successfull",user});
+
+      const token = jwt.sign({id:user.id},process.env.JWT_SECRET,{
+        expiresIn:"1h"
+      });
+      console.log("Token:",token);
+      const data= {
+        name:user.name,
+        email:user.email,
+        age:user.age,
+        token,
+      };
+       res.status(200).json({message:"login successfull", data});
     }catch(err){
       res.status(500).json({message: err.message})
       

@@ -1,5 +1,6 @@
 const express = require("express");
 const { createUser, getUser,updateUser, deleteUser, login } = require("../controller/user.controller");
+const authMiddleware = require("../middleware/auth.midlleware");
 const router = express.Router();
 
 //REST API Endpoints for User Management
@@ -10,7 +11,7 @@ router.post("/login-user",login)
 
 // Export the router to be used in the main app
 router.get("/get-user",getUser);
-router.put("/put-user/:id",updateUser);
+router.put("/put-user/:id" , authMiddleware,updateUser);
 router.delete("/delete-user/:id",deleteUser);
 
 
