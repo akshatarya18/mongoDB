@@ -31,8 +31,10 @@ const createUser = async (req, res) => {
     }
 
     const encryptPassword = await bcrypt.hash(password,10);
+
+    const image = req.file ? req.file.path : null;
     // Create new user using the correct fields
-    const newUser = await User.create({ age, name,email, password:encryptPassword });
+    const newUser = await User.create({ age, name,email, password:encryptPassword,image });
 
     res.status(201).json({ message: "User created successfully", user: newUser }); // Use 201 for creation
   } catch (err) {
@@ -90,6 +92,13 @@ const updateUser = async(req,res)=>{
   }catch(err){
     res.status(500).json({message: err.message})
   }
+}   
+const logout  = async(req,res)=>{
+  try{
+  res.status(200).json({message: "LOgout done"})
+} catch(err){
+ res.status(500).json({message:err.message})
+}
 }
 
 const deleteUser= async(req,res)=>{
@@ -103,4 +112,4 @@ const deleteUser= async(req,res)=>{
   }
 }
 
-module.exports = { createUser,getUser,updateUser,deleteUser,login};
+module.exports = { createUser,getUser,updateUser,deleteUser,login,logout};
